@@ -1,0 +1,316 @@
+<!-- Bread crumb is created dynamically -->
+<!-- row -->
+<div class="row">
+	
+	<!-- col -->
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="page-title txt-color-blueDark">
+			
+			<!-- PAGE HEADER -->
+			<i class="fa-fw fa fa-home"></i> 
+				首页
+		</h1>
+	</div>
+	<!-- end col -->
+	
+	<!-- right side of the page with the sparkline graphs -->
+</div>
+<!-- end row -->
+
+<!--
+	The ID "widget-grid" will start to initialize all widgets below 
+	You do not need to use widgets if you dont want to. Simply remove 
+	the <section></section> and you can use wells or panels instead 
+	-->
+
+<!-- widget grid -->
+<section id="widget-grid" class="">
+
+	<!-- row -->
+	<div class="row">
+		
+		<!-- NEW WIDGET START --> 
+		<article class="col-sm-12 col-md-12 col-lg-6">
+						<!-- Widget ID (each widget will need unique ID)-->
+			<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
+				<!-- widget options:
+				usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+				data-widget-colorbutton="false"
+				data-widget-editbutton="false"
+				data-widget-togglebutton="false"
+				data-widget-deletebutton="false"
+				data-widget-fullscreenbutton="false"
+				data-widget-custombutton="false"
+				data-widget-collapsed="true"
+				data-widget-sortable="false"
+
+				-->
+				<header>
+					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
+					<h2>话题列表 </h2>
+
+				</header>
+
+				<!-- widget div-->
+				<div>
+
+					<!-- widget edit box -->
+					<div class="jarviswidget-editbox">
+						<!-- This area used as dropdown edit box -->
+
+					</div>
+					<!-- end widget edit box -->
+
+					<!-- widget content -->
+					<div class="widget-body no-padding">
+						<div class="widget-body-toolbar">
+
+						</div>
+						
+						<table id="dt_basic" class="table table-striped table-bordered table-hover">
+							<thead>
+								<tr>
+									<th width="70%">标题</th>
+									<th>发起者</th>
+									<th>发表时间</th>
+								</tr>
+							</thead>
+							<tbody id="comment">
+							</tbody>
+						</table>
+
+					</div>
+					<!-- end widget content -->
+
+				</div>
+				<!-- end widget div -->
+
+			</div>
+			<!-- end widget -->
+			
+
+		</article>
+		<!-- WIDGET END -->
+		<!-- Widget ID (each widget will need unique ID)-->
+		<article class="col-sm-12 col-md-12 col-lg-6">
+		<div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-1" data-widget-editbutton="false">
+				<!-- widget options:
+				usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+				data-widget-colorbutton="false"
+				data-widget-editbutton="false"
+				data-widget-togglebutton="false"
+				data-widget-deletebutton="false"
+				data-widget-fullscreenbutton="false"
+				data-widget-custombutton="false"
+				data-widget-collapsed="true"
+				data-widget-sortable="false"
+
+				-->
+				<header>
+					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
+					<h2>通知 </h2>
+
+				</header>
+
+				<!-- widget div-->
+				<div>
+
+					<!-- widget edit box -->
+					<div class="jarviswidget-editbox">
+						<!-- This area used as dropdown edit box -->
+
+					</div>
+					<!-- end widget edit box -->
+
+					<!-- widget content -->
+					<div class="widget-body no-padding">
+
+						<table id="datatable_fixed_column" class="table table-striped table-bordered smart-form">
+							<thead>
+								<tr>
+									<th width="65%">标题</th>
+									<th>发起者</th>
+									<th>时间</th>
+								</tr>
+								<tr class="second">
+									<td>
+										<label class="input">
+											<input type="text" name="search_engine" value="Filter engines" class="search_init">
+										</label>
+									</td>
+									<td>
+										<label class="input">
+											<input type="text" name="search_browser" value="Filter browsers" class="search_init">
+										</label>	
+									</td>
+									<td>
+										<label class="input">
+											<input type="text" name="search_platform" value="Filter platforms" class="search_init">
+										</label>	
+									</td>
+								</tr>
+							</thead>
+							<tbody id="info">
+								<tr class="gradeX">
+									<td>Misc</td>
+									<td>Lynx</td>
+									<td>Text only</td>
+								</tr>
+								<tr class="gradeC">
+									<td>Misc</td>
+									<td>IE Mobile</td>
+									<td>Windows Mobile 6</td>
+								</tr>
+								<tr class="gradeC">
+									<td>Misc</td>
+									<td>PSP browser</td>
+									<td>PSP</td>
+								</tr>
+								<tr class="gradeU">
+									<td>Other browsers</td>
+									<td>All others</td>
+									<td>U</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<!-- end widget content -->
+
+				</div>
+				<!-- end widget div -->
+
+			</div>
+			<!-- end widget -->
+		</article>
+	
+	</div>
+
+	<!-- end row -->
+
+	<!-- row -->
+
+	<div class="row">
+
+		<!-- a blank row to get started -->
+		<div class="col-sm-12">
+			<!-- your contents here -->
+		</div>
+			
+	</div>
+
+	<!-- end row -->
+
+</section>
+<!-- end widget grid -->
+<script type="text/javascript">
+	/**
+	加载通知信息
+	*/
+	var loadInfo = function(){
+		$.post("/info/listValidInfo",{},function(result,status){
+			var infos = result;
+			$("#info").html("");
+			for(var i = 0; infos[i]; i++){
+				var info = infos[i];
+				var str = "<tr><td><a href=/smartAdmin/"+currentParentPath+"#ajax/infoDetail.html?infoId="+info.id+">"+info.title+"</a></td><td>"+info.pubUser+"</td><td>"+info.pubDate+"</td></tr>";
+				$("#info").append(str);
+			}
+			init();
+		});
+	}
+	/*
+	加载评论信息
+	*/
+	var loadComment = function(){
+		$.post("/comment/listValidComment",{},function(result,status){
+			var comments = result;
+			$("#comment").html("");
+			for(var i = 0; comments[i]; i++){
+				var comment = comments[i];
+				var str = "<tr><td><a href=/smartAdmin/"+currentParentPath+"#ajax/commentDetail.html?id="+comment.id+">"+comment.title+"</a></td><td>"+comment.pubUser+"</td><td>"+comment.pubDate+"</td></tr>";
+				$("#comment").append(str);
+			}
+			loadInfo();
+		});
+	}
+	
+	$(function(){
+		loadComment();
+		
+	});
+	function init(){
+		// DO NOT REMOVE : GLOBAL FUNCTIONS!
+		pageSetUp();
+		loadDataTableScripts();
+		function loadDataTableScripts() {
+
+			loadScript("js/plugin/datatables/jquery.dataTables-cust.min.js", dt_2);
+
+			function dt_2() {
+				loadScript("js/plugin/datatables/ColReorder.min.js", dt_3);
+			}
+
+			function dt_3() {
+				loadScript("js/plugin/datatables/FixedColumns.min.js", dt_4);
+			}
+
+			function dt_4() {
+				loadScript("js/plugin/datatables/ColVis.min.js", dt_5);
+			}
+
+			function dt_5() {
+				loadScript("js/plugin/datatables/ZeroClipboard.js", dt_6);
+			}
+
+			function dt_6() {
+				loadScript("js/plugin/datatables/media/js/TableTools.min.js", dt_7);
+			}
+
+			function dt_7() {
+				loadScript("js/plugin/datatables/DT_bootstrap.js", runDataTables);
+			}
+
+		}
+
+		function runDataTables() {
+			/*
+			 * 右边字段过滤
+			 */
+			$('#dt_basic').dataTable({
+				"sPaginationType" : "bootstrap_full"
+			});
+
+			/* END BASIC */
+
+			/*左边字段查询事件 */
+			$("#datatable_fixed_column thead input").keyup(function() {
+				oTable.fnFilter(this.value, oTable.oApi._fnVisibleToColumnIndex(oTable.fnSettings(), $("thead input").index(this)));
+			});
+			
+			/*触发左边字段查询*/
+			$("#datatable_fixed_column thead input").each(function(i) {
+				this.initVal = this.value;
+			});
+			/*触发点击去掉文字*/
+			$("#datatable_fixed_column thead input").focus(function() {
+				if (this.className == "search_init") {
+					this.className = "";
+					this.value = "";
+				}
+			});
+			
+			/*左边分页*/
+			var oTable = $('#datatable_fixed_column').dataTable({
+				"sDom" : "<'dt-top-row'><'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-6'i><'col-sm-6 text-right'p>>",
+				//"sDom" : "t<'row dt-wrapper'<'col-sm-6'i><'dt-row dt-bottom-row'<'row'<'col-sm-6'i><'col-sm-6 text-right'>>",
+				"oLanguage" : {
+					"sSearch" : "Search all columns:"
+				},
+				"bSortCellsTop" : true
+			});	
+		}
+	}
+
+</script>

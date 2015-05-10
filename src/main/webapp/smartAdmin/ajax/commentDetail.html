@@ -1,0 +1,185 @@
+<link rel="stylesheet" href="kindeditor/themes/default/default.css" />
+<script charset="utf-8" src="kindeditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="kindeditor/lang/zh_CN.js"></script>
+<!-- Bread crumb is created dynamically -->
+
+<!--
+The ID "widget-grid" will start to initialize all widgets below
+You do not need to use widgets if you dont want to. Simply remove
+the <section></section> and you can use wells or panels instead
+-->
+
+<!-- row -->
+<div class="row">
+
+	<div class="col-sm-12">
+
+		<div class="well">
+
+			<table class="table table-striped table-forum">
+				<thead>
+                    <tr>
+                        <th colspan="2" style="text-align: center;">
+                        	<h1 id="title"></h1>
+                        </th>
+                    </tr>
+                </thead>
+				<tbody>
+					<!-- Post -->
+					<tr>
+                        <td class="text-center">
+                        	<strong id="createUserName"></strong>
+                        </td>
+                        <td><em id="createTime"></em></td>
+                    </tr>		
+					<tr>
+                        <td class="text-center" style="width: 12%;">
+                            <div class="push-bit">
+                              	<img src="img/avatars/sunny.png" width="50" alt="avatar" class="online">
+                            </div>
+                        </td>
+                        <td id="createContent">
+                        </td>
+                    </tr>				
+					<!-- end Post -->
+
+
+					<!-- Post -->
+					<tr id="beforeMe">
+                        <td class="text-center">
+                        	<strong>Me</strong></a>
+                        </td>
+                        <td><em>今天</em></td>
+                    </tr>		
+					<tr>
+                        <td class="text-center" style="width: 12%;">
+                            <div class="push-bit">
+                               <img src="img/avatars/sunny.png" width="50" alt="avatar" class="online">
+                            </div>
+                        </td>
+                        <td>
+                        	<!-- <div id="forumPost"></div>
+                			<button class="btn btn-primary margin-top-10">Post</button>
+                			<button class="btn btn-success margin-top-10">Save for later</button> -->
+                			<form>
+								<textarea name="commentContent" style="width:99%;height:300px;"></textarea>
+								<a style="margin-left: 45.5%;width: 105px;font-size: 18px;font-family: '微软雅黑';" class="btn btn-default submitBtn" href="javascript:void(0);">提交</a>
+							</form>
+                        </td>
+                    </tr>				
+					<!-- end Post -->
+					
+				</tbody>
+			</table>
+
+			<div class="text-center">
+                <ul class="pagination pagination-sm">
+                    <li class="disabled"><a href="javascript:void(0);">Prev</a></li>
+                    <li class="active"><a href="javascript:void(0);">1</a></li>
+                    <li><a href="javascript:void(0);">2</a></li>
+                    <li><a href="javascript:void(0);">3</a></li>
+                    <li><a href="javascript:void(0);">...</a></li>
+                    <li><a href="javascript:void(0);">99</a></li>
+                    <li><a href="javascript:void(0);">Next</a></li>
+                </ul>
+            </div>
+
+		</div>
+	</div>
+
+</div>
+
+<!-- end row -->
+
+<!-- row -->
+
+<div class="row">
+
+	<!-- a blank row to get started -->
+
+</div>
+
+<!-- end row -->
+
+<script type="text/javascript">
+	
+	pageSetUp();
+	var loadComment = function(commentId){
+		$.post("/comment/listComentDetail",{commentId:commentId},function(data,status){
+			var result = data;
+			$("#title").text(result.commTitle);
+			$("#createUserName").text(result.commCreateUserName);
+			$("#createTime").text(result.commCreateTime);
+			$("#createContent").append(result.commContent);
+			
+			var discusses = result.commentUserDTOs;
+			for(var i = 0; discusses[i]; i++){
+				var discuss = discusses[i];
+				var imgStr = "<img src='img/avatars/5.png' width='50' alt='avatar' class='offline'>";
+				if(discuss.discussUserName == result.commCreateUserName){
+					imgStr = "<img src='img/avatars/sunny.png' width='50' alt='avatar' class='online'>";
+				}
+				var disStr = "<tr><td class='text-center'><strong>"+discuss.discussUserName+"</strong></td>"+
+					            "<td><em>"+discuss.discussTime+"</em></td></tr>"+
+					         "<tr><td class='text-center' style='width: 12%;'><div class='push-bit'>"+
+					         imgStr+
+					              "</div></td><td>"+discuss.discussContent+"</td></tr>";
+				$("#beforeMe").before(disStr);
+			}
+		});
+	}
+	var urlStr = location.href;
+	var splitStrs = urlStr.split("=");
+	var commentId;
+	if(splitStrs.length == 2){
+		var commentId = splitStrs[1];
+		loadComment(commentId);
+	}
+	
+	var editor = KindEditor;
+	var editorText;
+	editorText = editor.create('textarea[name=commentContent]', {
+		uploadJson : "/uploadController/upload",
+		fileManagerJson : "/fileManager/listFile",
+		allowFileManager : true
+	});
+	
+	var commentDiscuss = function(btn){
+		var content = editorText.sync().html();
+		console.log(content);
+		console.log(commentId);
+		$.post("/comment/commentDiscuss",{commentId:commentId,replyContent:content},function(data,status){
+			if(data){
+				$.smallBox({
+					title : "提示",
+					content : "<i class='fa fa-clock-o'></i> <i>回复成功</i>",
+					color : "#659265",
+					iconSmall : "fa fa-check fa-2x fadeInRight animated",
+					timeout : 1000
+				});
+				function reLoad(){
+					location.reload();
+				}
+				window.setTimeout(reLoad,1000);
+			}
+		});
+	}
+	
+	
+	$(".submitBtn").click(function(){
+		var that = $(this);
+		$.SmartMessageBox({
+			title : "<i class='fa fa-times' style='color:#ed1c24'></i> 回复话题",
+			content : "确定"+that.text()+"？",
+			buttons : '[取消][确定]'
+		}, 
+		function(ButtonPressed) {
+			if (ButtonPressed == "确定" && localStorage) {
+				commentDiscuss(that);
+			}
+			if (ButtonPressed == "取消") {
+				return;
+			}
+		});
+	});
+</script>

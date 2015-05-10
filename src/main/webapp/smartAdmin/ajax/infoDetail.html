@@ -1,0 +1,74 @@
+<link rel="stylesheet" href="kindeditor/themes/default/default.css" />
+<script charset="utf-8" src="kindeditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="kindeditor/lang/zh_CN.js"></script>
+<!-- Bread crumb is created dynamically -->
+
+<!--
+The ID "widget-grid" will start to initialize all widgets below
+You do not need to use widgets if you dont want to. Simply remove
+the <section></section> and you can use wells or panels instead
+-->
+
+<!-- row -->
+<div class="row">
+
+	<div class="col-sm-12">
+
+		<div class="well">
+
+			<table class="table table-striped table-forum">
+				<thead>
+                    <tr>
+                        <th colspan="2" style="text-align: center;">
+                        	<h1 id="infoTitle"></h1>
+                        	<h6 id="infoCreater"></h6>
+                        	<h6 id="infoCreateTime"></h6>
+                        </th>
+                    </tr>
+                </thead>
+				<tbody>
+					<!-- Post -->
+					<tr>
+                        <td id="infoContent"></td>
+                    </tr>		
+					
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+</div>
+
+<!-- end row -->
+
+<!-- row -->
+
+<div class="row">
+
+	<!-- a blank row to get started -->
+
+</div>
+
+<!-- end row -->
+
+<script type="text/javascript">
+	
+	pageSetUp();
+	var loadInfo = function(infoId){
+		$.post("/info/getInfoDetail",{infoId:infoId},function(data,status){
+			var result = data;
+			$("#infoTitle").text(result.title);
+			$("#infoCreater").text(result.pubUser);
+			$("#infoCreateTime").text(result.pubDate);
+			$("#infoContent").text(result.content);
+		});
+	}
+	var urlStr = location.href;
+	var splitStrs = urlStr.split("=");
+	var infoId;
+	if(splitStrs.length == 2){
+		var infoId = splitStrs[1];
+		loadInfo(infoId);
+	}
+	
+</script>

@@ -1,0 +1,134 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="page-title txt-color-blueDark">
+			<i class="fa fa-folder fa-fw "></i> 
+				文件管理
+			<span>> 
+				上传文件
+			</span>
+		</h1>
+	</div>
+</div>
+
+<!-- widget grid -->
+<section id="widget-grid" class="">
+
+	<!-- row -->
+	<div class="row">
+
+		<!-- NEW WIDGET START -->
+		<article class="col-sm-12">
+			<!-- Widget ID (each widget will need unique ID)-->
+			<div class="jarviswidget jarviswidget-color-blueLight" id="wid-id-0" data-widget-editbutton="false">
+				<!-- widget options:
+				usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+				data-widget-colorbutton="false"
+				data-widget-editbutton="false"
+				data-widget-togglebutton="false"
+				data-widget-deletebutton="false"
+				data-widget-fullscreenbutton="false"
+				data-widget-custombutton="false"
+				data-widget-collapsed="true"
+				data-widget-sortable="false"
+				-->
+				<header>
+					<span class="widget-icon"> <i class="fa fa-cloud"></i> </span>
+					<h2>上传文件 </h2>
+				</header>
+
+				<!-- widget div-->
+				<div>
+
+					<!-- widget edit box -->
+					<div class="jarviswidget-editbox">
+						<!-- This area used as dropdown edit box -->
+
+					</div>
+					<!-- end widget edit box -->
+
+					<!-- widget content -->
+					<div class="widget-body">
+
+						<form action="/uploadController/addFile" id="my-dropzone" class="dropzone"></form>
+
+					</div>
+					<!-- end widget content -->
+
+				</div>
+				<!-- end widget div -->
+
+			</div>
+			<!-- end widget -->
+
+		</article>
+		<!-- WIDGET END -->
+
+	</div>
+
+	<!-- end row -->
+</section>
+<!-- end widget grid -->
+
+<script type="text/javascript">
+
+	// DO NOT REMOVE : GLOBAL FUNCTIONS!
+	pageSetUp();
+
+	// PAGE RELATED SCRIPTS
+	loadScript("js/plugin/dropzone/dropzone.min.js", startDropzone);
+	
+	function startDropzone (){
+		 Dropzone.options.myDropzone = {
+			autoDiscover:false,
+			init: function() {
+			 
+			  this.on("addedfile", function(file) {
+				console.log(file);
+				// Create the remove button
+				var removeButton = Dropzone.createElement("<a class='btn btn-sm btn-danger btn-block'>Remove file</a>");
+				
+
+				// Capture the Dropzone instance as closure.
+				var _this = this;
+
+				// Listen to the click event
+				removeButton.addEventListener("click", function(e) {
+				  // Make sure the button click doesn't submit the form:
+				  e.preventDefault();
+				  e.stopPropagation();
+
+				  // Remove the file preview.
+				  
+				  _this.removeFile(file);
+				  var responseTextObject = eval('('+file.xhr.responseText+')');
+				  var removeUrl = responseTextObject.url;
+				  var fileInfoId = responseTextObject.fileId;
+				  //删除图片
+				  $.ajax({
+					type: 'POST',
+					url: '/fileManager/delFile',
+					data: 'fileInfoId=' + fileInfoId,
+					success: function(data,status){
+						console.log(data);
+						$.SmartMessageBox({
+							title : "提示",
+							content : data,
+							buttons : '[No][Yes]'
+						});
+					}
+				  });
+				  // If you want to the delete the file on the server as well,
+				  // you can do the AJAX request here.
+				});
+
+				// Add the button to the file preview element.
+				file.previewElement.appendChild(removeButton);
+			  });
+			}
+		};
+		//进行渲染
+		$("#my-dropzone").dropzone({});
+	}
+
+</script>
